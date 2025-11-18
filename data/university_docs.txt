@@ -1,39 +1,50 @@
-The university database contains five main tables: Students, Professors, Courses, Enrollments, and Departments.
+University Database Knowledge Base
 
-Students table stores information about students:
-- id: primary key
-- name: full name
-- email: contact email
-- department: academic department
-- year: year of study
-- gpa: grade point average
+Tables:
 
-Professors table stores professor data:
-- id: primary key
-- name: full name
-- department: their associated department
+Students(id, name, email, department, year, gpa)
+Professors(id, name, department)
+Courses(id, name, department, credits)
+Enrollments(id, student_id, course_id, semester, grade)
+Departments(id, name, building)
 
-Courses table stores course data:
-- id: primary key
-- name: course name
-- department: the department that offers the course
-- credits: number of credits for the course
+Relationships:
 
-Enrollments table:
-- id: primary key
-- student_id: references Students.id
-- course_id: references Courses.id
-- semester: semester name
-- grade: obtained grade
+- Enrollments.student_id → Students.id
+- Enrollments.course_id → Courses.id
+- Courses.department → Departments.name
+- Students.department → Departments.name
+- Professors.department → Departments.name
 
-Departments table:
-- id: primary key
-- name: department name
-- building: department location
+Example SQL Queries:
 
-Example SQL queries:
-- Fetch all students with GPA above 8.
-- List all courses offered by the Computer Science department.
-- Get the enrollment list for a specific course.
-- Retrieve professors in a given department.
-- Show students enrolled in Data Structures.
+1. Fetch all students with GPA above 8:
+SELECT name, gpa FROM Students WHERE gpa > 8;
+
+2. List all courses offered by the Computer Science department:
+SELECT name FROM Courses WHERE department = 'Computer Science';
+
+3. Get the enrollment list for a specific course (with joins):
+SELECT s.name, c.name AS course
+FROM Students s
+JOIN Enrollments e ON s.id = e.student_id
+JOIN Courses c ON e.course_id = c.id
+WHERE c.name = 'Data Structures';
+
+4. Retrieve professors in a given department:
+SELECT name FROM Professors WHERE department = 'Mechanical Engineering';
+
+5. Show students enrolled in a specific course (join example):
+SELECT s.name
+FROM Students s
+JOIN Enrollments e ON s.id = e.student_id
+JOIN Courses c ON e.course_id = c.id
+WHERE c.name = 'Machine Learning';
+
+Notes:
+
+- Always use table joins to find data across multiple tables.
+- Use exact column names from the schema.
+- Return only valid SQLite SQL.
+- Do not assume columns or tables that do not exist.
+- Focus on correct joins for queries involving multiple tables.
