@@ -1,0 +1,6 @@
+transformers
+sentence-transformers
+accelerate
+chromadb
+sqlite-utils
+tabulate

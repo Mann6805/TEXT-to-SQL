@@ -1,0 +1,39 @@
+The university database contains five main tables: Students, Professors, Courses, Enrollments, and Departments.
+
+Students table stores information about students:
+- id: primary key
+- name: full name
+- email: contact email
+- department: academic department
+- year: year of study
+- gpa: grade point average
+
+Professors table stores professor data:
+- id: primary key
+- name: full name
+- department: their associated department
+
+Courses table stores course data:
+- id: primary key
+- name: course name
+- department: the department that offers the course
+- credits: number of credits for the course
+
+Enrollments table:
+- id: primary key
+- student_id: references Students.id
+- course_id: references Courses.id
+- semester: semester name
+- grade: obtained grade
+
+Departments table:
+- id: primary key
+- name: department name
+- building: department location
+
+Example SQL queries:
+- Fetch all students with GPA above 8.
+- List all courses offered by the Computer Science department.
+- Get the enrollment list for a specific course.
+- Retrieve professors in a given department.
+- Show students enrolled in Data Structures.
