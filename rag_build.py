@@ -1,38 +1,41 @@
 import chromadb
 from sentence_transformers import SentenceTransformer
 
-# Persistent DB path
 CHROMA_PATH = "chroma_db"
+DOC_PATH = "data/university_docs.txt"
 
-# Load embedding model
-embed_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+embedder = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+client = chromadb.PersistentClient(path=CHROMA_PATH)
 
-# Load Chroma client
-chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
+def load_docs():
+    with open(DOC_PATH, "r", encoding="utf-8") as f:
+        text = f.read()
 
-# Create / get the collection
-collection = chroma_client.get_or_create_collection(
-    name="university_data",
-    metadata={"hnsw:space": "cosine"}
-)
+    # Split on TABLE keyword (cleanest)
+    chunks = [c.strip() for c in text.split("TABLE:") if c.strip()]
+    docs = ["TABLE: " + c for c in chunks]
+    return docs
 
-# Read RAG docs
-with open("data/university_docs.txt", "r") as f:
-    text = f.read()
+def build_rag():
+    docs = load_docs()
 
-# Chunking (simple splitting)
-chunks = text.split("\n\n")  # split paragraphs
+    try:
+        client.delete_collection("university_data")
+    except:
+        pass
 
-# Insert chunks into Chroma
-for idx, chunk in enumerate(chunks):
-    chunk_id = f"chunk_{idx}"
-    emb = embed_model.encode(chunk).tolist()
+    collection = client.create_collection("university_data")
+
+    embeddings = embedder.encode(docs).tolist()
+
+    ids = [f"doc_{i}" for i in range(len(docs))]
 
     collection.add(
-        ids=[chunk_id],
-        documents=[chunk],
-        embeddings=[emb],
-        metadatas=[{"source": "university_docs"}]
+        ids=ids,
+        documents=docs,
+        embeddings=embeddings
     )
+    print("RAG build complete.")
 
-print("Vector DB built successfully!")
+if __name__ == "__main__":
+    build_rag()

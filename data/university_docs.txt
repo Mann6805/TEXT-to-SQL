@@ -1,50 +1,88 @@
-University Database Knowledge Base
+TABLE: Students
+COLUMNS:
+- id (INTEGER, primary key)
+- name (TEXT)
+- email (TEXT)
+- department (TEXT)
+- year (INTEGER)
+- gpa (REAL)
 
-Tables:
+EXAMPLES:
+(1, "Rahul Sharma", "rahul@example.com", "Computer Science", 3, 8.2)
+(2, "Priya Singh", "priya@example.com", "Mechanical Engineering", 2, 7.8)
+(3, "Aman Verma", "aman@example.com", "Electrical Engineering", 4, 8.9)
+(4, "Neha Gupta", "neha@example.com", "Computer Science", 1, 9.1)
+(5, "Sanjay Patel", "sanjay@example.com", "Computer Science", 2, 8.5)
 
-Students(id, name, email, department, year, gpa)
-Professors(id, name, department)
-Courses(id, name, department, credits)
-Enrollments(id, student_id, course_id, semester, grade)
-Departments(id, name, building)
+NATURAL LANGUAGE:
+- Contains student details with GPA, departments, and academic year.
+- Useful for queries about performance, GPA, departments, and student names.
 
-Relationships:
 
-- Enrollments.student_id → Students.id
-- Enrollments.course_id → Courses.id
-- Courses.department → Departments.name
-- Students.department → Departments.name
-- Professors.department → Departments.name
 
-Example SQL Queries:
+TABLE: Professors
+COLUMNS:
+- id (INTEGER, primary key)
+- name (TEXT)
+- department (TEXT)
 
-1. Fetch all students with GPA above 8:
-SELECT name, gpa FROM Students WHERE gpa > 8;
+EXAMPLES:
+(1, "Dr. Arvind Kumar", "Computer Science")
+(2, "Dr. Meera Nair", "Mechanical Engineering")
+(3, "Dr. Sunil Rao", "Physics")
 
-2. List all courses offered by the Computer Science department:
-SELECT name FROM Courses WHERE department = 'Computer Science';
+NATURAL LANGUAGE:
+- Contains list of professors with departments.
 
-3. Get the enrollment list for a specific course (with joins):
-SELECT s.name, c.name AS course
-FROM Students s
-JOIN Enrollments e ON s.id = e.student_id
-JOIN Courses c ON e.course_id = c.id
-WHERE c.name = 'Data Structures';
 
-4. Retrieve professors in a given department:
-SELECT name FROM Professors WHERE department = 'Mechanical Engineering';
 
-5. Show students enrolled in a specific course (join example):
-SELECT s.name
-FROM Students s
-JOIN Enrollments e ON s.id = e.student_id
-JOIN Courses c ON e.course_id = c.id
-WHERE c.name = 'Machine Learning';
+TABLE: Courses
+COLUMNS:
+- id (INTEGER, primary key)
+- name (TEXT)
+- department (TEXT)
+- credits (INTEGER)
 
-Notes:
+EXAMPLES:
+(1, "Data Structures", "Computer Science", 4)
+(2, "Thermodynamics", "Mechanical Engineering", 3)
+(3, "Machine Learning", "Computer Science", 4)
+(4, "Digital Circuits", "Electrical Engineering", 3)
 
-- Always use table joins to find data across multiple tables.
-- Use exact column names from the schema.
-- Return only valid SQLite SQL.
-- Do not assume columns or tables that do not exist.
-- Focus on correct joins for queries involving multiple tables.
+NATURAL LANGUAGE:
+- Contains course names, their departments, and credits.
+
+
+
+TABLE: Departments
+COLUMNS:
+- id (INTEGER, primary key)
+- name (TEXT)
+- building (TEXT)
+
+EXAMPLES:
+(1, "Computer Science", "Block A")
+
+NATURAL LANGUAGE:
+- Contains university department names and their buildings.
+
+
+
+TABLE: Enrollments
+COLUMNS:
+- id (INTEGER, primary key)
+- student_id (INTEGER)
+- course_id (INTEGER)
+- semester (TEXT)
+- grade (TEXT)
+
+EXAMPLES:
+(1, 1, 1, "Fall 2024", "A")
+
+RELATIONSHIPS:
+- Students.id → Enrollments.student_id
+- Courses.id → Enrollments.course_id
+
+NATURAL LANGUAGE:
+- Represents which student is enrolled in which course.
+- Use for joining Students and Courses.
